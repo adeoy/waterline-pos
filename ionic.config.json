@@ -1,0 +1,7 @@
+{
+  "name": "waterline-pos",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
