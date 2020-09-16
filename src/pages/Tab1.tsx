@@ -13,8 +13,9 @@ import {
 import { cartOutline } from "ionicons/icons";
 
 import ProductTypeList from "../components/ProductTypeList";
-import { IProductType } from "../interfaces";
+import { IProductType, IVenta, IState, IActions } from "../interfaces";
 import { formatMoney } from "../utils";
+import useGlobal from "../globals/store";
 
 import "./Tab1.css";
 
@@ -56,15 +57,7 @@ const products: IProductType[] = [
   },
 ];
 
-interface IForm {
-  product_id: string;
-  product_name: string;
-  product_price: number;
-  units: number;
-  pay_recieved: number;
-}
-
-const defaultForm: IForm = {
+const defaultForm: IVenta = {
   product_id: "garrafon",
   product_name: "Garrafón",
   product_price: 10.0,
@@ -73,7 +66,10 @@ const defaultForm: IForm = {
 };
 
 const Tab1: React.FC = () => {
-  const [form, setForm] = useState<IForm>(defaultForm);
+  const [form, setForm] = useState<IVenta>(defaultForm);
+  const globalActions = useGlobal()[1];
+
+  const { addVenta } = globalActions;
 
   const handleClickProductType = (id: string, name: string, price: number) => {
     console.log(id);
@@ -105,7 +101,11 @@ const Tab1: React.FC = () => {
   };
 
   const addSell = () => {
-    setForm(defaultForm);
+    const cost = calculateCost();
+    if (form.units > 0 && cost > 0 && form.pay_recieved >= cost) {
+      setForm(defaultForm);
+      addVenta(form);
+    }
   };
 
   return (
@@ -123,7 +123,7 @@ const Tab1: React.FC = () => {
         </IonHeader>
 
         <IonList>
-          <h5 style={{marginLeft: '1rem'}}>Tipo de producto</h5>
+          <h5 style={{ marginLeft: "1rem" }}>Tipo de producto</h5>
           <IonItem>
             <ProductTypeList
               data={products}
@@ -132,9 +132,10 @@ const Tab1: React.FC = () => {
             />
           </IonItem>
 
-          <p style={{ textAlign: "center", fontWeight: "bold" }}>
-            Producto: <span style={{color: '#3880ff'}}>{form.product_name}</span>
-          </p>
+          <h5 style={{ textAlign: "center", fontWeight: "bold" }}>
+            Producto:{" "}
+            <span style={{ color: "#3880ff" }}>{form.product_name}</span>
+          </h5>
 
           <h5 style={{ marginLeft: "1rem" }}>Cantidad</h5>
           <div className="ion-text-center">
@@ -147,10 +148,10 @@ const Tab1: React.FC = () => {
             />
           </div>
 
-          <h5 style={{ marginLeft: "1rem" }}>Se cobraran</h5>
+          <h5 style={{ marginLeft: "1rem" }}>Se cobrarán</h5>
           <p className="label-number">{formatMoney(calculateCost())}</p>
 
-          <h5 style={{ marginLeft: "1rem" }}>Con cuanto se pago?</h5>
+          <h5 style={{ marginLeft: "1rem" }}>¿Con cuánto se pago?</h5>
           <div className="ion-text-center">
             <input
               type="number"
@@ -175,7 +176,7 @@ const Tab1: React.FC = () => {
             onClick={addSell}
           >
             <IonIcon slot="start" icon={cartOutline} />
-            Crear venta
+            Registrar venta
           </IonButton>
         </IonList>
       </IonContent>
