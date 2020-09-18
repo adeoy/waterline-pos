@@ -6,7 +6,8 @@ const initialState: IState = {
         isOpen: false,
         message: '',
         color: 'dark',
-    }
+    },
+    productTypes: []
 }
 
 export default initialState;

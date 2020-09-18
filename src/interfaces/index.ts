@@ -1,13 +1,13 @@
 export interface IProductType {
-  id: string;
   name: string;
+  title: string;
   image: string;
   price: number;
 }
 
 export interface ISale {
-  product_id: string;
   product_name: string;
+  product_title: string;
   product_price: number;
   units: number;
   pay_received: number;
@@ -23,10 +23,12 @@ export interface IToast {
 export interface IState {
   sales: ISale[];
   toast: IToast;
+  productTypes: IProductType[];
 }
 
 export interface IActions {
   addSale: (sale: ISale) => void;
   changeToast: (toast: IToast) => void;
   openToast: (isOpen: boolean) => void;
+  getProductTypes: (url: string) => void;
 }

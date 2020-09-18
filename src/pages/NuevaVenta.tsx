@@ -16,74 +16,36 @@ import {
 import { cartOutline } from "ionicons/icons";
 
 import ProductTypeList from "../components/ProductTypeList";
-import { IProductType, ISale } from "../interfaces";
+import { ISale } from "../interfaces";
 import { formatMoney } from "../utils";
 
-import "./Tab1.css";
+import "./NuevaVenta.css";
 
-import imgGarrafon from "../assets/images/product-types/garrafon.jpg";
-import imgLitro from "../assets/images/product-types/litro.jpg";
-import imgBotella from "../assets/images/product-types/botella.jpg";
-import imgGalon from "../assets/images/product-types/galon.jpg";
-
-import useGlobal from '../global/store';
+import useGlobal from "../global/store";
 import Toast from "../components/Toast";
 
-const products: IProductType[] = [
-  {
-    id: "garrafon",
-    name: "Garrafón",
-    image: imgGarrafon,
-    price: 10.0,
-  },
-  {
-    id: "litro",
-    name: "Litro",
-    image: imgLitro,
-    price: 0.5,
-  },
-  {
-    id: "botella",
-    name: "Botella",
-    image: imgBotella,
-    price: 6.0,
-  },
-  {
-    id: "medio_garrafon",
-    name: "Medio garrafón",
-    image: imgGarrafon,
-    price: 8.0,
-  },
-  {
-    id: "galon",
-    name: "Galón",
-    image: imgGalon,
-    price: 8.0,
-  },
-];
-
 const defaultForm: ISale = {
-  product_id: "garrafon",
-  product_name: "Garrafón",
+  product_name: "garrafon",
+  product_title: "Garrafón",
   product_price: 10.0,
   units: 0,
   pay_received: 0.0,
   cost: 0.0,
 };
 
-const Tab1: React.FC = () => {
+const NuevaVenta: React.FC = () => {
   const [state, actions] = useGlobal();
 
-  const {toast} = state;
-  const {addSale} = actions;
+  const { toast, productTypes } = state;
+  const { addSale, openToast } = actions;
 
   const [form, setForm] = useState<ISale>(defaultForm);
 
-  const handleClickProductType = (id: string, name: string, price: number) => {
+  const handleClickProductType = (name: string, title: string, price: number) => {
     setForm({
       ...form,
-      product_id: id,
       product_name: name,
+      product_title: title,
       product_price: price,
       cost: price * form.units,
     });
@@ -119,9 +81,8 @@ const Tab1: React.FC = () => {
     addSale(form);
   };
 
-  const isSellDisabled = () => (
-    !(form.units > 0 && form.pay_received > 0 && form.pay_received > form.cost)
-  );
+  const isSellDisabled = () =>
+    !(form.units > 0 && form.pay_received > 0 && form.pay_received > form.cost);
 
   return (
     <IonPage>
@@ -141,9 +102,9 @@ const Tab1: React.FC = () => {
           <h5 style={{ marginLeft: "1rem" }}>Tipo de producto</h5>
           <IonItem>
             <ProductTypeList
-              data={products}
+              data={productTypes}
               handleClick={handleClickProductType}
-              currentId={form.product_id}
+              currentName={form.product_name}
             />
           </IonItem>
 
@@ -205,10 +166,10 @@ const Tab1: React.FC = () => {
           </IonButton>
         </IonList>
 
-        <Toast {...toast} />
+        <Toast {...toast} onDidDismiss={() => openToast(false)} />
       </IonContent>
     </IonPage>
   );
 };
 
-export default Tab1;
+export default NuevaVenta;

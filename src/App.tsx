@@ -11,8 +11,8 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { square, cart, water } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
+import NuevaVenta from './pages/NuevaVenta';
+import VentasDia from './pages/VentasDia';
 import Tab3 from './pages/Tab3';
 
 /* Core CSS required for Ionic components to work properly */
@@ -39,17 +39,17 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/tab2" component={Tab2} exact={true} />
+          <Route path="/nueva-venta" component={NuevaVenta} exact={true} />
+          <Route path="/ventas-dia" component={VentasDia} exact={true} />
           <Route path="/tab3" component={Tab3} />
-          <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
+          <Route path="/" render={() => <Redirect to="/nueva-venta" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
+          <IonTabButton tab="tab1" href="/nueva-venta">
             <IonIcon icon={cart} />
             <IonLabel>Nueva venta</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
+          <IonTabButton tab="tab2" href="/ventas-dia">
             <IonIcon icon={water} />
             <IonLabel>Ventas del dia</IonLabel>
           </IonTabButton>

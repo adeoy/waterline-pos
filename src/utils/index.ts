@@ -1,3 +1,1 @@
-export const formatMoney = (value: number): string => {
-    return `$${value.toFixed(2)}`;
-}
+export const formatMoney = (value: number): string => `$${value.toFixed(2)}`;

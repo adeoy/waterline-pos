@@ -5,8 +5,8 @@ import { formatMoney } from "../utils";
 
 interface IProps {
   item: IProductType;
-  handleClick: (id: string, name: string, price: number) => void;
-  currentId: string;
+  handleClick: (name: string, title: string, price: number) => void;
+  currentName: string;
 }
 
 const activeStyle = {
@@ -14,12 +14,12 @@ const activeStyle = {
 };
 
 const ProductType: React.FC<IProps> = ({
-  item: { id, name, image, price },
+  item: { name, title, image, price },
   handleClick,
-  currentId,
+  currentName,
 }) => (
-  <IonCard className="scroll-item" onClick={() => handleClick(id, name, price)} style={id === currentId ? activeStyle : {}}>
-    <img src={image} alt={name} width={80} />
+  <IonCard className="scroll-item" onClick={() => handleClick(name, title, price)} style={name === currentName ? activeStyle : {}}>
+    <img src={image} alt={title} width={80} />
     <IonLabel style={{ fontWeight: "bold" }} color="primary">{formatMoney(price)}</IonLabel>
   </IonCard>
 );
