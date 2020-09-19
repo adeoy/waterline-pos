@@ -7,8 +7,15 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import "./VentasDia.css";
+import SaleItemList from '../components/SaleItemList';
+
+import useGlobal from "../global/store";
 
 const VentasDia: React.FC = () => {
+  const [state, actions] = useGlobal();
+
+  const { sales, productTypes } = state;
+
   return (
     <IonPage>
       <IonHeader>
@@ -16,7 +23,9 @@ const VentasDia: React.FC = () => {
           <IonTitle>Ventas del día</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen></IonContent>
+      <IonContent fullscreen>
+        <SaleItemList sales={sales} />
+      </IonContent>
     </IonPage>
   );
 };

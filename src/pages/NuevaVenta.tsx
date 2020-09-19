@@ -31,6 +31,7 @@ const defaultForm: ISale = {
   units: 0,
   pay_received: 0.0,
   cost: 0.0,
+  date: new Date().toISOString(),
 };
 
 const NuevaVenta: React.FC = () => {
@@ -41,7 +42,11 @@ const NuevaVenta: React.FC = () => {
 
   const [form, setForm] = useState<ISale>(defaultForm);
 
-  const handleClickProductType = (name: string, title: string, price: number) => {
+  const handleClickProductType = (
+    name: string,
+    title: string,
+    price: number
+  ) => {
     setForm({
       ...form,
       product_name: name,
@@ -78,7 +83,7 @@ const NuevaVenta: React.FC = () => {
 
   const addSell = () => {
     setForm(defaultForm);
-    addSale(form);
+    addSale({ ...form, date: new Date().toISOString() });
   };
 
   const isSellDisabled = () =>

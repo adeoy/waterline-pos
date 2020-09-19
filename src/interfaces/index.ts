@@ -12,6 +12,7 @@ export interface ISale {
   units: number;
   pay_received: number;
   cost: number;
+  date: string;
 }
 
 export interface IToast {
