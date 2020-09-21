@@ -115,7 +115,7 @@ const NuevaVenta: React.FC = () => {
 
           <p style={{ textAlign: "center", fontWeight: "bold" }}>
             Producto:{" "}
-            <span style={{ color: "#3880ff" }}>{form.product_name}</span>
+            <span style={{ color: "#3880ff" }}>{form.product_title}</span>
           </p>
 
           <IonGrid>

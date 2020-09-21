@@ -1,7 +1,8 @@
 import { Store } from "use-global-hook";
+import axios from "axios";
+
 import { ISale, IState, IToast } from "../interfaces";
 import { IActions } from "../interfaces/index";
-import axios from "axios";
 
 export const addSale = (store: Store<IState, IActions>, sale: ISale) => {
   axios

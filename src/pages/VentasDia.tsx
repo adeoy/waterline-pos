@@ -12,9 +12,11 @@ import SaleItemList from '../components/SaleItemList';
 import useGlobal from "../global/store";
 
 const VentasDia: React.FC = () => {
-  const [state, actions] = useGlobal();
+  const state = useGlobal()[0];
 
-  const { sales, productTypes } = state;
+  const { sales } = state;
+
+  
 
   return (
     <IonPage>
