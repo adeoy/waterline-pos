@@ -4,7 +4,7 @@ import ProductType from "./ProductType";
 
 interface IProps {
   data: IProductType[];
-  handleClick: (name: string, title: string, price: number) => void;
+  handleClick: (name: string, title: string, price: number, comision: number) => void;
   currentName: string;
 }
 

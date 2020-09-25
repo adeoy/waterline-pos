@@ -3,16 +3,24 @@ export interface IProductType {
   title: string;
   image: string;
   price: number;
+  comision: number;
+}
+
+export interface IGeo {
+  lat: number;
+  long: number;
 }
 
 export interface ISale {
   product_name: string;
   product_title: string;
   product_price: number;
+  product_comision: number;
   units: number;
   pay_received: number;
   cost: number;
   date: string;
+  geo: IGeo;
 }
 
 export interface IToast {
@@ -21,15 +29,38 @@ export interface IToast {
   color: string;
 }
 
+export interface IAlert {
+  isOpen: boolean;
+  message: string;
+  onConfirm: () => void;
+}
+
+export interface IEmployeeType {
+  type: string;
+  comision: boolean;
+}
+
+export interface IEmployee extends IEmployeeType {
+  name: string;
+}
+
 export interface IState {
+  employee: IEmployee;
   sales: ISale[];
+  deletedSales: ISale[];
   toast: IToast;
-  productTypes: IProductType[];
+  alert: IAlert;
+  version: string;
 }
 
 export interface IActions {
   addSale: (sale: ISale) => void;
   changeToast: (toast: IToast) => void;
   openToast: (isOpen: boolean) => void;
-  getProductTypes: (url: string) => void;
+  changeAlert: (alert: IAlert) => void;
+  openAlert: (isOpen: boolean) => void;
+  getDataFromLocalStorage: () => void;
+  removeSale: (date: string) => void;
+  reportData: () => void;
+  setEmployee: (employee: IEmployee) => void;
 }

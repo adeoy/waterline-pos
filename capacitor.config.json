@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "waterline-pos",
+  "appId": "com.adeoapps.waterline.pos",
+  "appName": "Waterline POS",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
@@ -9,5 +9,6 @@
       "launchShowDuration": 0
     }
   },
-  "cordova": {}
+  "cordova": {},
+  "linuxAndroidStudioPath": "/home/hugo/Programas/android-studio/bin/studio.sh"
 }

@@ -7,7 +7,7 @@ interface IProps {
   sales: ISale[];
 }
 
-const SaleItemList: React.FC<IProps> = ({ sales }) => (
+const SaleItemList: React.FC<IProps> = ({ sales}) => (
   <IonList>
     {sales.map((sale) => (
       <SaleItem key={sale.date} sale={sale} />

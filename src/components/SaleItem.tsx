@@ -1,22 +1,39 @@
 import React from "react";
-import { IonItem, IonAvatar, IonLabel } from "@ionic/react";
+import { IonItem, IonAvatar, IonLabel, IonButton, IonIcon } from "@ionic/react";
+import { trashBinOutline } from "ionicons/icons";
+
 import Moment from "react-moment";
 import "moment-timezone";
-
-import useGlobal from "../global/store";
+import "moment/locale/es-us";
 
 import { ISale } from "../interfaces";
+import {productTypes} from "../data/";
+import { formatMoney } from "../utils";
+
+import useGlobal from "../global/store";
 
 interface IProps {
   sale: ISale;
 }
 
 const SaleItem: React.FC<IProps> = ({ sale }) => {
-  const state = useGlobal()[0];
+  const [state, actions] = useGlobal();
+  const {employee} = state;
+  const { changeAlert, removeSale } = actions;
 
-  const { productTypes } = state;
+  const image = productTypes.filter(
+    (item) => item.name === sale.product_name
+  )[0].image;
 
-  const image = productTypes.filter(item => item.name === sale.product_name)[0].image;
+  const handleDelete = () => {
+    changeAlert({
+      isOpen: true,
+      message: "¿Esta seguro de eliminar la venta?",
+      onConfirm: () => {
+        removeSale(sale.date);
+      },
+    });
+  };
 
   return (
     <IonItem>
@@ -26,12 +43,23 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
       <IonLabel>
         <h2>{sale.product_title}</h2>
         <h3>
-          {sale.units} x {sale.cost}
+          {sale.units} x {formatMoney(sale.cost)} + {employee.comision && (<span>Comisión: {formatMoney(sale.product_comision * sale.units)}</span>)}
         </h3>
         <p>
-          <Moment fromNow>{sale.date}</Moment>
+          <Moment fromNow locale="es-us">
+            {sale.date}
+          </Moment>
         </p>
       </IonLabel>
+      <IonButton
+        fill="clear"
+        size="large"
+        slot="end"
+        color="danger"
+        onClick={() => handleDelete()}
+      >
+        <IonIcon icon={trashBinOutline} color="danger" />
+      </IonButton>
     </IonItem>
   );
 };

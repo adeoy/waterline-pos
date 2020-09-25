@@ -7,7 +7,7 @@ import * as actions from "./actions";
 import { IState, IActions } from "../interfaces";
 
 const initializer = (store: Store<IState, IActions>) => {
-    store.actions.getProductTypes('http://127.0.0.1:8000/product-types/');
+    store.actions.getDataFromLocalStorage();
   };
 
 const useGlobal = globalHook<IState, IActions>(React, initialState, actions, initializer);
