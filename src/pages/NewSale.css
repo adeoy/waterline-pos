@@ -1,0 +1,39 @@
+.scroll-menu {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.scroll-menu > .scroll-item {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.input-number:focus {
+  border: 1px solid #3dc2ff;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 4px 16px;
+  background-color: white;
+}
+.input-number {
+    height: 5rem;
+    width: 10rem;
+    font-size: 3.5rem;
+    text-align: center;
+    border-radius: 1rem;
+    border: 1px solid #92949c;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
+    background-color: #f4f5f8;
+}
+
+.label-number {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
+}
+
+input:focus{
+  outline: none;
+}
