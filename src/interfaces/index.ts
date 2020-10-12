@@ -21,6 +21,7 @@ export interface ISale {
   cost: number;
   date: string;
   geo: IGeo;
+  gas_charge: number;
 }
 
 export interface IToast {
@@ -35,9 +36,15 @@ export interface IAlert {
   onConfirm: () => void;
 }
 
+export interface IEmployeeRoute {
+  name: string;
+  gas_charge: number;
+}
+
 export interface IEmployeeType {
   type: string;
   comision: boolean;
+  route: IEmployeeRoute;
 }
 
 export interface IEmployee extends IEmployeeType {
@@ -51,6 +58,7 @@ export interface IState {
   toast: IToast;
   alert: IAlert;
   version: string;
+  apiUrl: string;
 }
 
 export interface IActions {

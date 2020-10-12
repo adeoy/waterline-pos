@@ -13,6 +13,7 @@ import SaleItemList from "../components/SaleItemList";
 import useGlobal from "../global/store";
 import { ISale } from "../interfaces";
 import { formatMoney } from "../utils/index";
+import NoSales from '../components/helper/NoSales';
 
 const VentasDia: React.FC = () => {
   const state = useGlobal()[0];
@@ -47,7 +48,7 @@ const VentasDia: React.FC = () => {
       <IonContent fullscreen>
         {employee.comision && (
           <>
-            <h5 style={{ marginLeft: "1rem" }}>Comisión por ventas:</h5>
+            <h5 style={{ marginLeft: "1rem" }}>Mis ganancias:</h5>
             <p className="label-number">{formatMoney(getComision())}</p>
             <h5 style={{ marginLeft: "1rem" }}>Ventas</h5>
           </>
@@ -55,13 +56,7 @@ const VentasDia: React.FC = () => {
 
         {sales.length > 0 ? (
           <SaleItemList sales={sales.sort(sortDates)} />
-        ) : (
-          <IonLabel>
-            <p style={{ marginTop: "2rem" }} className="ion-text-center">
-              No hay ventas registradas
-            </p>
-          </IonLabel>
-        )}
+        ) : <NoSales />}
 
         <IonLabel>
           <p className="ion-text-center">Versión: {version}</p>

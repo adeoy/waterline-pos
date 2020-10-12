@@ -13,6 +13,7 @@ import {
 import { cloudUploadOutline } from "ionicons/icons";
 
 import useGlobal from "../global/store";
+import NoSales from '../components/helper/NoSales';
 
 const Reporter: React.FC = () => {
   const [state, actions] = useGlobal();
@@ -52,14 +53,18 @@ const Reporter: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <IonList>
-          <IonItem onClick={report}>
-            <IonIcon slot="start" icon={cloudUploadOutline} color="primary" />
-            <IonLabel>
-              <h2>Subir {sales.length} ventas</h2>
-            </IonLabel>
-          </IonItem>
-        </IonList>
+        {sales.length > 0 ? (
+          <IonList>
+            <IonItem onClick={report}>
+              <IonIcon slot="start" icon={cloudUploadOutline} color="primary" />
+              <IonLabel>
+                <h2>Subir {sales.length} ventas</h2>
+              </IonLabel>
+            </IonItem>
+          </IonList>
+        ) : 
+          <NoSales message="No hay ventas que reportar"/>
+        }
 
         <IonLabel>
           <p className="ion-text-center">Versión: {version}</p>

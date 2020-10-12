@@ -5,6 +5,7 @@ const initialState: IState = {
     name: "",
     type: "local",
     comision: false,
+    route: { name: "Local", gas_charge: 0.0 },
   },
   sales: [],
   deletedSales: [],
@@ -19,6 +20,7 @@ const initialState: IState = {
     onConfirm: () => {},
   },
   version: "1.0.0",
+  apiUrl: "https://consultaunica.mx/wl/",
 };
 
 export default initialState;

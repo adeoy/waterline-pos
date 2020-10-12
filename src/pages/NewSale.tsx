@@ -48,6 +48,7 @@ const NewSale: React.FC = () => {
       lat: 0.0,
       long: 0.0,
     },
+    gas_charge: 0.0,
   };
 
   const [form, setForm] = useState<ISale>(defaultForm);
@@ -79,10 +80,12 @@ const NewSale: React.FC = () => {
   const onChangeUnits = (e: React.FormEvent<HTMLInputElement>) => {
     const units = Number(e.currentTarget.value || 0);
     const cost = form.product_price * units;
+    const gas_charge = units * employee.route.gas_charge;
     setForm({
       ...form,
       units,
       cost,
+      gas_charge,
     });
   };
 
@@ -94,7 +97,7 @@ const NewSale: React.FC = () => {
   };
 
   const calculateChange = (): number => {
-    const change: number = form.pay_received - calculateComisionCost();
+    const change: number = form.pay_received - (calculateComisionCost() + form.gas_charge);
     if (change < 0) {
       return 0.0;
     }
@@ -118,7 +121,7 @@ const NewSale: React.FC = () => {
     !(
       form.units > 0 &&
       form.pay_received > 0 &&
-      form.pay_received >= calculateComisionCost()
+      form.pay_received >= calculateComisionCost() + form.gas_charge
     );
 
   return (
@@ -178,7 +181,7 @@ const NewSale: React.FC = () => {
               </IonCol>
               <IonCol size="6">
                 <p className="label-number">
-                  {formatMoney(calculateComisionCost())}
+                  {formatMoney(calculateComisionCost() + form.gas_charge)}
                 </p>
               </IonCol>
             </IonRow>

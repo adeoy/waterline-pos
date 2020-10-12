@@ -25,7 +25,7 @@ export const getDataFromLocalStorage = async (
 ) => {
   const sales = await getItem("sales", []);
   const deletedSales = await getItem("deletedSales", []);
-  const employee = await getItem("employee", {name: "", type: "local"});
+  const employee = await getItem("employee", { name: "John Deere", type: "local", route: { name: "Local", gas_charge: 0.0 } });
   store.setState({
     ...store.state,
     sales,
@@ -91,8 +91,9 @@ export const openAlert = (store: Store<IState, IActions>, isOpen: boolean) => {
 };
 
 export const reportData = (store: Store<IState, IActions>) => {
-  const { sales, deletedSales } = store.state;
-  Axios.post("http://127.0.0.1:5000/report/sales/", {
+  const { apiUrl, employee, sales, deletedSales } = store.state;
+  Axios.post(apiUrl + "report/sales/", {
+    employee,
     sales,
     deletedSales,
   })
@@ -121,9 +122,9 @@ export const reportData = (store: Store<IState, IActions>) => {
           },
         });
       }
-      console.log(data);
     })
     .catch((err) => {
+      console.log(err);
       store.setState({
         ...store.state,
         toast: {

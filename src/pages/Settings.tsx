@@ -17,19 +17,30 @@ import {
 
 import useGlobal from "../global/store";
 import { medalOutline, personOutline } from "ionicons/icons";
-import { employeeTypes } from "../data";
+import { employeeTypes, employeeRoutes } from "../data";
+import { formatMoney } from "../utils/index";
 
 const Settings: React.FC = () => {
   const [state, actions] = useGlobal();
-
 
   const { employee, version } = state;
   const { setEmployee } = actions;
 
   const handleEmployeeType = (e: any) => {
     const type = e.detail.value!;
-    const comision = employeeTypes.find(item => item.type === type)!.comision;
-    setEmployee({ ...employee, type, comision });
+    const comision = employeeTypes.find((item) => item.type === type)!.comision;
+    setEmployee({
+      ...employee,
+      type,
+      comision,
+      route: { name: "Local", gas_charge: 0.0 },
+    });
+  };
+
+  const handleEmployeeRoute = (e: any) => {
+    const routeName = e.detail.value!;
+    const route = employeeRoutes.find((item) => item.name === routeName)!;
+    setEmployee({ ...employee, route });
   };
 
   return (
@@ -68,6 +79,22 @@ const Settings: React.FC = () => {
               <IonSelectOption value="truck">Repartidor</IonSelectOption>
             </IonSelect>
           </IonItem>
+          {employee.type === "truck" && (
+            <IonItem>
+              <IonIcon icon={medalOutline} slot="start" />
+              <IonLabel>Ruta:</IonLabel>
+              <IonSelect
+                value={employee.route.name}
+                onIonChange={handleEmployeeRoute}
+              >
+                {employeeRoutes.map((item) => (
+                  <IonSelectOption key={item.name} value={item.name}>
+                    {item.name} + {formatMoney(item.gas_charge)}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonItem>
+          )}
         </IonList>
 
         <IonLabel>

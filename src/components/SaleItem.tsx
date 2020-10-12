@@ -1,13 +1,13 @@
 import React from "react";
 import { IonItem, IonAvatar, IonLabel, IonButton, IonIcon } from "@ionic/react";
-import { trashBinOutline } from "ionicons/icons";
+import { cashOutline, trashBinOutline, carOutline } from "ionicons/icons";
 
 import Moment from "react-moment";
 import "moment-timezone";
 import "moment/locale/es-us";
 
 import { ISale } from "../interfaces";
-import {productTypes} from "../data/";
+import { productTypes } from "../data/";
 import { formatMoney } from "../utils";
 
 import useGlobal from "../global/store";
@@ -18,7 +18,7 @@ interface IProps {
 
 const SaleItem: React.FC<IProps> = ({ sale }) => {
   const [state, actions] = useGlobal();
-  const {employee} = state;
+  const { employee } = state;
   const { changeAlert, removeSale } = actions;
 
   const image = productTypes.filter(
@@ -41,9 +41,23 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
         <img src={image} alt="Venta" />
       </IonAvatar>
       <IonLabel>
-        <h2>{sale.product_title}</h2>
+        <h2>{sale.units} x {sale.product_title}</h2>
         <h3>
-          {sale.units} x {formatMoney(sale.cost)} + {employee.comision && (<span>Comisión: {formatMoney(sale.product_comision * sale.units)}</span>)}
+          {formatMoney(sale.cost)}
+          {employee.comision && (
+            <span style={{ color: "#2dd36f" }}>
+              {" "}
+              + <IonIcon icon={cashOutline} color="success"></IonIcon>{" "}
+              {formatMoney(sale.product_comision * sale.units)}
+            </span>
+          )}
+          {employee.route.gas_charge > 0 && (
+            <span style={{ color: "#eb445a" }}>
+              {" "}
+              + <IonIcon icon={carOutline} color="danger"></IonIcon>{" "}
+              {formatMoney(sale.gas_charge)}
+            </span>
+          )}
         </h3>
         <p>
           <Moment fromNow locale="es-us">

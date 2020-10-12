@@ -41,7 +41,7 @@ const ProductType: React.FC<IProps> = ({
     >
       <img src={image} alt={title} width={80} />
       <IonLabel style={{ fontWeight: "bold" }} color="primary">
-        {formatMoney(price + calculateComision())}
+        {formatMoney(price + calculateComision() + (employee.route.gas_charge))}
       </IonLabel>
     </IonCard>
   );
