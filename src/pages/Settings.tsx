@@ -16,9 +16,10 @@ import {
 } from "@ionic/react";
 
 import useGlobal from "../global/store";
-import { medalOutline, personOutline } from "ionicons/icons";
+import { mapOutline, medalOutline, personOutline } from "ionicons/icons";
 import { employeeTypes, employeeRoutes } from "../data";
 import { formatMoney } from "../utils/index";
+import Reporter from "../components/Reporter";
 
 const Settings: React.FC = () => {
   const [state, actions] = useGlobal();
@@ -81,7 +82,7 @@ const Settings: React.FC = () => {
           </IonItem>
           {employee.type === "truck" && (
             <IonItem>
-              <IonIcon icon={medalOutline} slot="start" />
+              <IonIcon icon={mapOutline} slot="start" />
               <IonLabel>Ruta:</IonLabel>
               <IonSelect
                 value={employee.route.name}
@@ -95,6 +96,8 @@ const Settings: React.FC = () => {
               </IonSelect>
             </IonItem>
           )}
+
+          <Reporter />
         </IonList>
 
         <IonLabel>
