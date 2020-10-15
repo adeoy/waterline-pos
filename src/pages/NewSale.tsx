@@ -25,7 +25,12 @@ import "./NewSale.css";
 import useGlobal from "../global/store";
 
 import { Plugins } from "@capacitor/core";
-import {productTypes} from "../data/";
+import { productTypes } from "../data/";
+import {
+  calculateComisionCost,
+  getApplyRule,
+  getGasChargeByUnits,
+} from "../utils/local";
 
 const { Geolocation } = Plugins;
 
@@ -48,7 +53,11 @@ const NewSale: React.FC = () => {
       lat: 0.0,
       long: 0.0,
     },
-    gas_charge: 0.0,
+    route: {
+      name: "Local",
+      gas_charge: 0.0,
+    },
+    rule: null,
   };
 
   const [form, setForm] = useState<ISale>(defaultForm);
@@ -69,23 +78,28 @@ const NewSale: React.FC = () => {
     });
   };
 
-  const calculateComisionCost = () =>{
-    if (employee.comision) {
-      return (form.product_price + form.product_comision) * form.units;
-    } else {
-      return form.product_price * form.units;
-    }
-  }
-
   const onChangeUnits = (e: React.FormEvent<HTMLInputElement>) => {
-    const units = Number(e.currentTarget.value || 0);
-    const cost = form.product_price * units;
-    const gas_charge = units * employee.route.gas_charge;
+    let units = Number(e.currentTarget.value || 0);
+    if (units > 25) units = 25;
+
+    const { rule, product_price } = getApplyRule(
+      form.product_price,
+      form.product_name,
+      units,
+      defaultForm.product_price,
+      employee.comision
+    );
+
+    const cost = product_price * units;
+    const route = employee.route;
+
     setForm({
       ...form,
+      product_price,
       units,
       cost,
-      gas_charge,
+      route,
+      rule,
     });
   };
 
@@ -97,7 +111,10 @@ const NewSale: React.FC = () => {
   };
 
   const calculateChange = (): number => {
-    const change: number = form.pay_received - (calculateComisionCost() + form.gas_charge);
+    const change: number =
+      form.pay_received -
+      (calculateComisionCost(employee.comision, form) +
+        getGasChargeByUnits(form));
     if (change < 0) {
       return 0.0;
     }
@@ -106,7 +123,19 @@ const NewSale: React.FC = () => {
 
   const addSell = async () => {
     setForm(defaultForm);
-    const coordinates = await Geolocation.getCurrentPosition();
+    let coordinates = {
+      coords: {
+        latitude: 0.0,
+        longitude: 0.0,
+      },
+    };
+
+    try {
+      coordinates = await Geolocation.getCurrentPosition();
+    } catch (err) {
+      console.log(err);
+    }
+
     let geo: IGeo = { lat: 0.0, long: 0.0 };
     if (coordinates) {
       geo = {
@@ -121,7 +150,9 @@ const NewSale: React.FC = () => {
     !(
       form.units > 0 &&
       form.pay_received > 0 &&
-      form.pay_received >= calculateComisionCost() + form.gas_charge
+      form.pay_received >=
+        calculateComisionCost(employee.comision, form) +
+          getGasChargeByUnits(form)
     );
 
   return (
@@ -145,6 +176,7 @@ const NewSale: React.FC = () => {
               data={productTypes}
               handleClick={handleClickProductType}
               currentName={form.product_name}
+              units={form.units}
             />
           </IonItem>
 
@@ -181,7 +213,10 @@ const NewSale: React.FC = () => {
               </IonCol>
               <IonCol size="6">
                 <p className="label-number">
-                  {formatMoney(calculateComisionCost() + form.gas_charge)}
+                  {formatMoney(
+                    calculateComisionCost(employee.comision, form) +
+                      getGasChargeByUnits(form)
+                  )}
                 </p>
               </IonCol>
             </IonRow>

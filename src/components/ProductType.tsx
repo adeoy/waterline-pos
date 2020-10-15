@@ -4,6 +4,7 @@ import { IProductType } from "../interfaces";
 import { formatMoney } from "../utils";
 
 import useGlobal from "../global/store";
+import { getApplyRule } from "../utils/local";
 
 interface IProps {
   item: IProductType;
@@ -14,6 +15,7 @@ interface IProps {
     comision: number
   ) => void;
   currentName: string;
+  units: number;
 }
 
 const activeStyle = {
@@ -24,6 +26,7 @@ const ProductType: React.FC<IProps> = ({
   item: { name, title, image, price, comision },
   handleClick,
   currentName,
+  units,
 }) => {
   const state = useGlobal()[0];
 
@@ -33,6 +36,15 @@ const ProductType: React.FC<IProps> = ({
     return employee.comision ? comision : 0;
   };
 
+  const { product_price } = getApplyRule(
+    price,
+    name,
+    units,
+    10.0,
+    employee.comision
+  );
+  price = product_price;
+
   return (
     <IonCard
       className="scroll-item"
@@ -41,7 +53,7 @@ const ProductType: React.FC<IProps> = ({
     >
       <img src={image} alt={title} width={80} />
       <IonLabel style={{ fontWeight: "bold" }} color="primary">
-        {formatMoney(price + calculateComision() + (employee.route.gas_charge))}
+        {formatMoney(price + calculateComision() + employee.route.gas_charge)}
       </IonLabel>
     </IonCard>
   );

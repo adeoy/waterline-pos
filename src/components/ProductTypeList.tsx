@@ -6,12 +6,14 @@ interface IProps {
   data: IProductType[];
   handleClick: (name: string, title: string, price: number, comision: number) => void;
   currentName: string;
+  units: number;
 }
 
 const ProductTypeList: React.FC<IProps> = ({
   data,
   handleClick,
   currentName,
+  units,
 }) => (
   <div className="scroll-menu">
     {data.map((item) => (
@@ -20,6 +22,7 @@ const ProductTypeList: React.FC<IProps> = ({
         item={item}
         handleClick={handleClick}
         currentName={currentName}
+        units={units}
       />
     ))}
   </div>

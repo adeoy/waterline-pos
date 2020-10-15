@@ -2,6 +2,7 @@ import {
   IProductType,
   IEmployeeType,
   IEmployeeRoute,
+  IPriceRule,
 } from "../interfaces/index";
 
 import imgGarrafon from "../assets/images/garrafon.jpg";
@@ -92,4 +93,25 @@ export const employeeRoutes: IEmployeeRoute[] = [
     name: "Manuel",
     gas_charge: 1.0,
   },
+];
+
+export const pricesRules: IPriceRule[] = [
+  {
+    name: "Entre 6 y menos de 8",
+    price: 9.0,
+    valid: (units: number): boolean =>
+      units >= 6 && units < 8,
+  },
+  {
+    name: "Entre 8 y menos de 10",
+    price: 8.0,
+    valid: (units: number): boolean =>
+      units >= 8 && units < 10,
+  },
+  {
+    name: "Entre 10 y menos de 26",
+    price: 7.0,
+    valid: (units: number): boolean =>
+      units >= 10 && units < 26,
+  }
 ];

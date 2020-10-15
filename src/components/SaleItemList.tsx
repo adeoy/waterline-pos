@@ -1,15 +1,25 @@
 import React from "react";
-import { IonList } from "@ionic/react";
+import { IonItemDivider, IonLabel, IonList } from "@ionic/react";
 import { ISale } from "../interfaces";
 import SaleItem from "./SaleItem";
 
 interface IProps {
-  sales: ISale[];
+  todaySales: ISale[];
+  oldSales: ISale[];
 }
 
-const SaleItemList: React.FC<IProps> = ({ sales}) => (
+const SaleItemList: React.FC<IProps> = ({ todaySales, oldSales }) => (
   <IonList>
-    {sales.map((sale) => (
+    <IonItemDivider>
+      <IonLabel>Hoy</IonLabel>
+    </IonItemDivider>
+    {todaySales.map((sale) => (
+      <SaleItem key={sale.date} sale={sale} />
+    ))}
+    <IonItemDivider>
+      <IonLabel>Antiguas</IonLabel>
+    </IonItemDivider>
+    {oldSales.map((sale) => (
       <SaleItem key={sale.date} sale={sale} />
     ))}
   </IonList>

@@ -10,10 +10,11 @@ import {
   IonTabs,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { cart, water, settingsOutline } from "ionicons/icons";
+import { cart, water, settingsOutline, cash } from "ionicons/icons";
 import NewSale from "./pages/NewSale";
 import DailySales from "./pages/DailySales";
 import Settings from "./pages/Settings";
+import Stats from "./pages/Stats";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -51,7 +52,8 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route path="/new-sale" component={NewSale} exact={true} />
             <Route path="/daily-sales" component={DailySales} exact={true} />
-            <Route path="/settings" component={Settings} />
+            <Route path="/stats" component={Stats} exact={true} />
+            <Route path="/settings" component={Settings} exact={true} />
             <Route
               path="/"
               render={() => <Redirect to="/new-sale" />}
@@ -65,7 +67,11 @@ const App: React.FC = () => {
             </IonTabButton>
             <IonTabButton tab="tab2" href="/daily-sales">
               <IonIcon icon={water} />
-              <IonLabel>Ventas del dia</IonLabel>
+              <IonLabel>Ventas</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab3" href="/stats">
+              <IonIcon icon={cash} />
+              <IonLabel>Dineros</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab4" href="/settings">
               <IonIcon icon={settingsOutline} />

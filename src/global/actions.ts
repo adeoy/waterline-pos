@@ -5,6 +5,7 @@ import { IActions } from "../interfaces";
 import { setItem, getItem, delItem } from "../utils";
 import { IAlert } from "../interfaces/index";
 import Axios from "axios";
+import { getSalesComision } from "../utils/local";
 
 export const addSale = (store: Store<IState, IActions>, sale: ISale) => {
   const sales = [...store.state.sales, sale];
@@ -25,12 +26,20 @@ export const getDataFromLocalStorage = async (
 ) => {
   const sales = await getItem("sales", []);
   const deletedSales = await getItem("deletedSales", []);
-  const employee = await getItem("employee", { name: "John Deere", type: "local", route: { name: "Local", gas_charge: 0.0 } });
+  const employee = await getItem("employee", {
+    name: "John Deere",
+    type: "local",
+    route: { name: "Local", gas_charge: 0.0 },
+  });
+  const salesInfo = await getItem("salesInfo", {
+    weekComision: 0.0,
+  });
   store.setState({
     ...store.state,
     sales,
     deletedSales,
     employee,
+    salesInfo,
   });
 };
 
@@ -91,8 +100,35 @@ export const openAlert = (store: Store<IState, IActions>, isOpen: boolean) => {
 };
 
 export const reportData = (store: Store<IState, IActions>) => {
-  const { apiUrl, employee, sales, deletedSales } = store.state;
-  Axios.post(apiUrl + "report/sales/", {
+  const {
+    apiUrl,
+    employee,
+    sales,
+    deletedSales,
+    salesInfo: { weekComision },
+  } = store.state;
+
+  const todayComision = getSalesComision(sales);
+  const salesInfo = {
+    weekComision: weekComision + todayComision,
+  };
+
+  setItem("salesInfo", salesInfo);
+  delItem("sales");
+  delItem("deletedSales");
+
+  store.setState({
+    ...store.state,
+    sales: [],
+    deletedSales: [],
+    salesInfo,
+    toast: {
+      isOpen: true,
+      message: "¡Carga completa!",
+      color: "primary",
+    },
+  });
+  /*Axios.post(apiUrl + "report/sales/", {
     employee,
     sales,
     deletedSales,
@@ -100,12 +136,16 @@ export const reportData = (store: Store<IState, IActions>) => {
     .then((resp) => {
       const { status, data } = resp;
       if (status === 201) {
+        const todayComision = getSalesComision(sales);
         delItem("sales");
         delItem("deletedSales");
         store.setState({
           ...store.state,
           sales: [],
           deletedSales: [],
+          salesInfo: {
+            weekComision: weekComision + todayComision
+          },
           toast: {
             isOpen: true,
             message: "¡Carga completa!",
@@ -133,7 +173,7 @@ export const reportData = (store: Store<IState, IActions>) => {
           color: "danger",
         },
       });
-    });
+    });*/
 };
 
 export const setEmployee = (

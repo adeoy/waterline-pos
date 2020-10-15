@@ -8,55 +8,45 @@ import {
   IonLabel,
 } from "@ionic/react";
 
+import moment from 'moment';
+import "moment-timezone";
+import "moment/locale/es-us";
+
 import SaleItemList from "../components/SaleItemList";
 
 import useGlobal from "../global/store";
-import { ISale } from "../interfaces";
-import { formatMoney } from "../utils/index";
-import NoSales from '../components/helper/NoSales';
+import NoSales from "../components/helper/NoSales";
+import { sortDates } from "../utils/local";
 
 const VentasDia: React.FC = () => {
   const state = useGlobal()[0];
 
-  const { sales, version, employee } = state;
+  const { sales, version } = state;
 
-  const sortDates = (a: ISale, b: ISale): number => {
-    let comparison = 0;
-    if (a.date > b.date) {
-      comparison = 1;
-    } else if (a.date < b.date) {
-      comparison = -1;
-    }
-    return comparison * -1;
-  };
+  const date = moment(new Date().toISOString());
+  const sortedSales = sales.sort(sortDates);
 
-  const getComision = (): number => {
-    let comision: number = 0.0;
-    sales.forEach((item) => {
-      comision += item.product_comision * item.units;
-    });
-    return comision;
-  };
+  const todaySales = sortedSales.filter(
+    (item) => moment(item.date).diff(date, 'days') === 0
+  );
+
+  const oldSales = sortedSales.filter(
+    (item) => moment(item.date).diff(date, 'days') > 0
+  );
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Ventas del día</IonTitle>
+          <IonTitle>Ventas</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {employee.comision && (
-          <>
-            <h5 style={{ marginLeft: "1rem" }}>Mis ganancias:</h5>
-            <p className="label-number">{formatMoney(getComision())}</p>
-            <h5 style={{ marginLeft: "1rem" }}>Ventas</h5>
-          </>
-        )}
-
         {sales.length > 0 ? (
-          <SaleItemList sales={sales.sort(sortDates)} />
-        ) : <NoSales />}
+          <SaleItemList todaySales={todaySales} oldSales={oldSales} />
+        ) : (
+          <NoSales />
+        )}
 
         <IonLabel>
           <p className="ion-text-center">Versión: {version}</p>

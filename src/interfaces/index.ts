@@ -11,6 +11,17 @@ export interface IGeo {
   long: number;
 }
 
+export interface IEmployeeRoute {
+  name: string;
+  gas_charge: number;
+}
+
+export interface IPriceRule {
+  name: string;
+  price: number;
+  valid: (units: number) => boolean;
+}
+
 export interface ISale {
   product_name: string;
   product_title: string;
@@ -21,7 +32,8 @@ export interface ISale {
   cost: number;
   date: string;
   geo: IGeo;
-  gas_charge: number;
+  route: IEmployeeRoute;
+  rule: IPriceRule | null;
 }
 
 export interface IToast {
@@ -36,11 +48,6 @@ export interface IAlert {
   onConfirm: () => void;
 }
 
-export interface IEmployeeRoute {
-  name: string;
-  gas_charge: number;
-}
-
 export interface IEmployeeType {
   type: string;
   comision: boolean;
@@ -51,6 +58,10 @@ export interface IEmployee extends IEmployeeType {
   name: string;
 }
 
+export interface ISalesInfo {
+  weekComision: number;
+}
+
 export interface IState {
   employee: IEmployee;
   sales: ISale[];
@@ -59,6 +70,7 @@ export interface IState {
   alert: IAlert;
   version: string;
   apiUrl: string;
+  salesInfo: ISalesInfo;
 }
 
 export interface IActions {

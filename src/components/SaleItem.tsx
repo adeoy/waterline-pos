@@ -11,6 +11,7 @@ import { productTypes } from "../data/";
 import { formatMoney } from "../utils";
 
 import useGlobal from "../global/store";
+import { getGasChargeByUnits } from "../utils/local";
 
 interface IProps {
   sale: ISale;
@@ -35,6 +36,9 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
     });
   };
 
+  const gasCharge = getGasChargeByUnits(sale);
+  const ganancia = employee.comision ? sale.product_comision : 0.0 * sale.units;
+
   return (
     <IonItem>
       <IonAvatar slot="start">
@@ -43,26 +47,27 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
       <IonLabel>
         <h2>{sale.units} x {sale.product_title}</h2>
         <h3>
+  <span style={{ color: "#3880ff" }}>{formatMoney(sale.cost + ganancia + gasCharge)}</span>{" = "}
           {formatMoney(sale.cost)}
           {employee.comision && (
             <span style={{ color: "#2dd36f" }}>
               {" "}
               + <IonIcon icon={cashOutline} color="success"></IonIcon>{" "}
-              {formatMoney(sale.product_comision * sale.units)}
+              {formatMoney(ganancia)}
             </span>
           )}
-          {employee.route.gas_charge > 0 && (
+          {gasCharge > 0 && (
             <span style={{ color: "#eb445a" }}>
               {" "}
               + <IonIcon icon={carOutline} color="danger"></IonIcon>{" "}
-              {formatMoney(sale.gas_charge)}
+              {formatMoney(gasCharge)}
             </span>
           )}
         </h3>
         <p>
           <Moment fromNow locale="es-us">
             {sale.date}
-          </Moment>
+          </Moment> ({sale.route.name})
         </p>
       </IonLabel>
       <IonButton

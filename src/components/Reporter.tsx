@@ -3,7 +3,6 @@ import { IonLabel, IonIcon, IonItem, IonItemDivider } from "@ionic/react";
 import { cloudUploadOutline } from "ionicons/icons";
 
 import useGlobal from "../global/store";
-import NoSales from "./helper/NoSales";
 
 const Reporter: React.FC = () => {
   const [state, actions] = useGlobal();

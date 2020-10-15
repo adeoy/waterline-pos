@@ -19,6 +19,9 @@ const initialState: IState = {
     message: "",
     onConfirm: () => {},
   },
+  salesInfo: {
+    weekComision: 0.0,
+  },
   version: "1.0.0",
   apiUrl: "https://consultaunica.mx/wl/",
 };
