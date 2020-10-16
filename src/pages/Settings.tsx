@@ -13,13 +13,13 @@ import {
   IonIcon,
   IonSelect,
   IonSelectOption,
+  IonFooter,
 } from "@ionic/react";
 
 import useGlobal from "../global/store";
 import { mapOutline, medalOutline, personOutline } from "ionicons/icons";
 import { employeeTypes, employeeRoutes } from "../data";
 import { formatMoney } from "../utils/index";
-import Reporter from "../components/Reporter";
 
 const Settings: React.FC = () => {
   const [state, actions] = useGlobal();
@@ -96,14 +96,19 @@ const Settings: React.FC = () => {
               </IonSelect>
             </IonItem>
           )}
-
-          <Reporter />
         </IonList>
-
-        <IonLabel>
-          <p className="ion-text-center">Versión: {version}</p>
-        </IonLabel>
       </IonContent>
+
+      <IonFooter>
+        <IonLabel>
+          <p
+            className="ion-text-center"
+            style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
+          >
+            Versión: {version}
+          </p>
+        </IonLabel>
+      </IonFooter>
     </IonPage>
   );
 };

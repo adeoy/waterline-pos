@@ -32,7 +32,7 @@ const Reporter: React.FC = () => {
     return (
       <>
         <IonItemDivider>
-          <IonLabel>Reportar</IonLabel>
+          <IonLabel>Reportar al final de día</IonLabel>
         </IonItemDivider>
         <IonItem onClick={report}>
           <IonIcon slot="start" icon={cloudUploadOutline} color="primary" />

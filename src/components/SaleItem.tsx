@@ -1,6 +1,11 @@
 import React from "react";
 import { IonItem, IonAvatar, IonLabel, IonButton, IonIcon } from "@ionic/react";
-import { cashOutline, trashBinOutline, carOutline } from "ionicons/icons";
+import {
+  cashOutline,
+  trashBinOutline,
+  carOutline,
+  waterOutline,
+} from "ionicons/icons";
 
 import Moment from "react-moment";
 import "moment-timezone";
@@ -37,7 +42,8 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
   };
 
   const gasCharge = getGasChargeByUnits(sale);
-  const ganancia = employee.comision ? sale.product_comision : 0.0 * sale.units;
+  const ganancia =
+    (employee.comision ? sale.product_comision : 0.0) * sale.units;
 
   return (
     <IonItem>
@@ -45,10 +51,17 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
         <img src={image} alt="Venta" />
       </IonAvatar>
       <IonLabel>
-        <h2>{sale.units} x {sale.product_title}</h2>
+        <h2>
+          {sale.units} x {sale.product_title} ={" "}
+          <span style={{ color: "#3880ff" }}>
+            {formatMoney(sale.cost + ganancia + gasCharge)}
+          </span>
+        </h2>
         <h3>
-  <span style={{ color: "#3880ff" }}>{formatMoney(sale.cost + ganancia + gasCharge)}</span>{" = "}
-          {formatMoney(sale.cost)}
+          <span style={{color: '#3dc2ff'}}>
+            <IonIcon icon={waterOutline} color="secondary"></IonIcon>
+            {formatMoney(sale.cost)}
+          </span>
           {employee.comision && (
             <span style={{ color: "#2dd36f" }}>
               {" "}
@@ -67,7 +80,8 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
         <p>
           <Moment fromNow locale="es-us">
             {sale.date}
-          </Moment> ({sale.route.name})
+          </Moment>{" "}
+          ({sale.route.name})
         </p>
       </IonLabel>
       <IonButton

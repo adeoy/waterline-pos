@@ -8,7 +8,7 @@ import {
   IonLabel,
 } from "@ionic/react";
 
-import moment from 'moment';
+import moment from "moment";
 import "moment-timezone";
 import "moment/locale/es-us";
 
@@ -27,11 +27,11 @@ const VentasDia: React.FC = () => {
   const sortedSales = sales.sort(sortDates);
 
   const todaySales = sortedSales.filter(
-    (item) => moment(item.date).diff(date, 'days') === 0
+    (item) => moment(item.date).diff(date, "days") === 0
   );
 
   const oldSales = sortedSales.filter(
-    (item) => moment(item.date).diff(date, 'days') > 0
+    (item) => moment(item.date).diff(date, "days") > 0
   );
 
   return (
@@ -47,10 +47,6 @@ const VentasDia: React.FC = () => {
         ) : (
           <NoSales />
         )}
-
-        <IonLabel>
-          <p className="ion-text-center">Versión: {version}</p>
-        </IonLabel>
       </IonContent>
     </IonPage>
   );

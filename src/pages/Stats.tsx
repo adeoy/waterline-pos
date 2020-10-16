@@ -4,7 +4,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
-  IonLabel,
+  IonList,
   IonPage,
   IonRow,
   IonTitle,
@@ -18,11 +18,12 @@ import "moment/locale/es-us";
 import useGlobal from "../global/store";
 import { formatMoney } from "../utils";
 import { calculateComisionCost, getGasChargeByUnits, getSalesComision, sortDates } from "../utils/local";
+import RestartComision from "../components/RestartComision";
 
 const Stats: React.FC = () => {
   const state = useGlobal()[0];
 
-  const { sales, version, employee, salesInfo } = state;
+  const { sales, employee, salesInfo } = state;
 
   const date = moment(new Date().toISOString());
   const sortedSales = sales.sort(sortDates);
@@ -112,9 +113,9 @@ const Stats: React.FC = () => {
           </IonRow>
         </IonGrid>
 
-        <IonLabel>
-          <p className="ion-text-center">Versión: {version}</p>
-        </IonLabel>
+        <IonList>
+          <RestartComision />
+        </IonList>
       </IonContent>
     </IonPage>
   );

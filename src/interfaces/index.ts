@@ -83,4 +83,5 @@ export interface IActions {
   removeSale: (date: string) => void;
   reportData: () => void;
   setEmployee: (employee: IEmployee) => void;
+  restartComision: () => void;
 }

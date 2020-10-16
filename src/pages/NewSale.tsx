@@ -12,7 +12,7 @@ import {
   IonCol,
   IonGrid,
   IonRow,
-  IonLabel,
+  IonFooter,
 } from "@ionic/react";
 import { cartOutline } from "ionicons/icons";
 
@@ -37,7 +37,7 @@ const { Geolocation } = Plugins;
 const NewSale: React.FC = () => {
   const [state, actions] = useGlobal();
 
-  const { version, employee } = state;
+  const { employee } = state;
   const { addSale } = actions;
 
   const defaultForm: ISale = {
@@ -245,27 +245,23 @@ const NewSale: React.FC = () => {
               </IonCol>
             </IonRow>
           </IonGrid>
-
-          <IonButton
-            expand="block"
-            style={{
-              marginTop: "1rem",
-              marginBottom: "0.5rem",
-              marginLeft: "1rem",
-              marginRight: "1rem",
-            }}
-            onClick={addSell}
-            disabled={isSellDisabled()}
-          >
-            <IonIcon slot="start" icon={cartOutline} />
-            Crear venta
-          </IonButton>
-
-          <IonLabel>
-            <p className="ion-text-center">Versión: {version}</p>
-          </IonLabel>
         </IonList>
       </IonContent>
+
+      <IonFooter>
+        <IonButton
+          expand="block"
+          style={{
+            marginLeft: "1rem",
+            marginRight: "1rem",
+          }}
+          onClick={addSell}
+          disabled={isSellDisabled()}
+        >
+          <IonIcon slot="start" icon={cartOutline} />
+          Vender
+        </IonButton>
+      </IonFooter>
     </IonPage>
   );
 };

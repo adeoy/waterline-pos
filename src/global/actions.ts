@@ -108,7 +108,7 @@ export const reportData = (store: Store<IState, IActions>) => {
     salesInfo: { weekComision },
   } = store.state;
 
-  const todayComision = getSalesComision(sales);
+  /*const todayComision = getSalesComision(sales);
   const salesInfo = {
     weekComision: weekComision + todayComision,
   };
@@ -127,8 +127,9 @@ export const reportData = (store: Store<IState, IActions>) => {
       message: "¡Carga completa!",
       color: "primary",
     },
-  });
-  /*Axios.post(apiUrl + "report/sales/", {
+  });*/
+
+  Axios.post(apiUrl + "report/sales/", {
     employee,
     sales,
     deletedSales,
@@ -137,15 +138,19 @@ export const reportData = (store: Store<IState, IActions>) => {
       const { status, data } = resp;
       if (status === 201) {
         const todayComision = getSalesComision(sales);
+        const salesInfo = {
+          weekComision: weekComision + todayComision,
+        };
+
         delItem("sales");
         delItem("deletedSales");
+        setItem("salesInfo", salesInfo);
+
         store.setState({
           ...store.state,
           sales: [],
           deletedSales: [],
-          salesInfo: {
-            weekComision: weekComision + todayComision
-          },
+          salesInfo,
           toast: {
             isOpen: true,
             message: "¡Carga completa!",
@@ -173,7 +178,7 @@ export const reportData = (store: Store<IState, IActions>) => {
           color: "danger",
         },
       });
-    });*/
+    });
 };
 
 export const setEmployee = (
@@ -184,5 +189,17 @@ export const setEmployee = (
   store.setState({
     ...store.state,
     employee,
+  });
+};
+
+export const restartComision = (store: Store<IState, IActions>) => {
+  const salesInfo = {
+    weekComision: 0.0,
+  };
+
+  setItem("salesInfo", salesInfo);
+  store.setState({
+    ...store.state,
+    salesInfo,
   });
 };
