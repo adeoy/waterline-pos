@@ -97,7 +97,7 @@ const Stats: React.FC = () => {
             </IonCol>
             <IonCol size="6">
               <h5 style={{ marginLeft: "1rem", textAlign: "center" }}>
-                Entregar hoy
+              {employee.comision ? "Entregar hoy" : "Ventas del día"}
               </h5>
             </IonCol>
           </IonRow>

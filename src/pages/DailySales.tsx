@@ -30,7 +30,7 @@ const VentasDia: React.FC = () => {
   );
 
   const oldSales = sortedSales.filter(
-    (item) => moment(item.date).diff(date, "days") > 0
+    (item) => moment(item.date).diff(date, "days") !== 0
   );
 
   return (
