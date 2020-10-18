@@ -13,6 +13,8 @@ import {
   IonGrid,
   IonRow,
   IonFooter,
+  IonSpinner,
+  IonLabel,
 } from "@ionic/react";
 import { cartOutline } from "ionicons/icons";
 
@@ -36,6 +38,7 @@ const { Geolocation } = Plugins;
 
 const NewSale: React.FC = () => {
   const [state, actions] = useGlobal();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { employee } = state;
   const { addSale } = actions;
@@ -122,6 +125,7 @@ const NewSale: React.FC = () => {
   };
 
   const addSell = async () => {
+    setLoading(true);
     setForm(defaultForm);
     let coordinates = {
       coords: {
@@ -144,6 +148,7 @@ const NewSale: React.FC = () => {
       };
     }
     addSale({ ...form, geo, date: new Date().toISOString() });
+    setLoading(false);
   };
 
   const isSellDisabled = () =>
@@ -258,8 +263,15 @@ const NewSale: React.FC = () => {
           onClick={addSell}
           disabled={isSellDisabled()}
         >
-          <IonIcon slot="start" icon={cartOutline} />
-          Vender
+          {loading ? (
+            <IonLabel>
+              <IonSpinner />
+            </IonLabel>
+          ) : (
+            <span>
+              <IonIcon slot="start" icon={cartOutline} /> Vender
+            </span>
+          )}
         </IonButton>
       </IonFooter>
     </IonPage>

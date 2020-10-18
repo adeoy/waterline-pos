@@ -11,8 +11,16 @@ export const sortDates = (a: ISale, b: ISale): number => {
   return comparison * -1;
 };
 
-export const getGasChargeByUnits = (sale: ISale): number =>
-  sale.units * sale.route.gas_charge;
+export const getGasChargeByUnits = (sale: ISale): number => {
+  if (
+    sale.product_name === "garrafon" ||
+    sale.product_name === "medio_garrafon"
+  ) {
+    return sale.units * sale.route.gas_charge;
+  } else {
+    return 0.0;
+  }
+};
 
 export const calculateComisionCost = (
   isComision: boolean,
@@ -59,5 +67,5 @@ export const getApplyRule = (
   if (rule) {
     product_price = rule.price;
   }
-  return {rule, product_price};
+  return { rule, product_price };
 };

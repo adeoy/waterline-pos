@@ -45,6 +45,11 @@ const ProductType: React.FC<IProps> = ({
   );
   price = product_price;
 
+  let gasCharge =
+    name === "garrafon" || name === "medio_garrafon"
+      ? employee.route.gas_charge
+      : 0.0;
+
   return (
     <IonCard
       className="scroll-item"
@@ -53,7 +58,7 @@ const ProductType: React.FC<IProps> = ({
     >
       <img src={image} alt={title} width={80} />
       <IonLabel style={{ fontWeight: "bold" }} color="primary">
-        {formatMoney(price + calculateComision() + employee.route.gas_charge)}
+        {formatMoney(price + calculateComision() + gasCharge)}
       </IonLabel>
     </IonCard>
   );

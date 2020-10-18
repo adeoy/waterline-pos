@@ -5,7 +5,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonLabel,
 } from "@ionic/react";
 
 import moment from "moment";
@@ -21,7 +20,7 @@ import { sortDates } from "../utils/local";
 const VentasDia: React.FC = () => {
   const state = useGlobal()[0];
 
-  const { sales, version } = state;
+  const { sales } = state;
 
   const date = moment(new Date().toISOString());
   const sortedSales = sales.sort(sortDates);
