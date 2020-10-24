@@ -22,6 +22,23 @@ export interface IPriceRule {
   valid: (units: number) => boolean;
 }
 
+export interface IOfferAxB {
+  get: number;
+  pay: number;
+}
+
+export interface IOfferDate {
+  from: string;
+  to: string;
+}
+
+export interface IOffer {
+  name: string;
+  type: string;
+  data: IOfferAxB;
+  date: IOfferDate;
+}
+
 export interface ISale {
   product_name: string;
   product_title: string;
@@ -34,6 +51,8 @@ export interface ISale {
   geo: IGeo;
   route: IEmployeeRoute;
   rule: IPriceRule | null;
+  offer: IOffer | null;
+  offerDiscount: number;
 }
 
 export interface IToast {
@@ -71,6 +90,7 @@ export interface IState {
   version: string;
   apiUrl: string;
   salesInfo: ISalesInfo;
+  currentOffer: IOffer | null;
 }
 
 export interface IActions {
@@ -84,4 +104,5 @@ export interface IActions {
   reportData: () => void;
   setEmployee: (employee: IEmployee) => void;
   restartComision: () => void;
+  setOffer: (offer: IOffer | null) => void;
 }

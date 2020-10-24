@@ -17,24 +17,32 @@ import {
 } from "@ionic/react";
 
 import useGlobal from "../global/store";
-import { mapOutline, medalOutline, personOutline } from "ionicons/icons";
-import { employeeTypes, employeeRoutes } from "../data";
+import {
+  cashOutline,
+  mapOutline,
+  medalOutline,
+  personOutline,
+} from "ionicons/icons";
+import { employeeTypes, employeeRoutes, offers } from "../data";
 import { formatMoney } from "../utils/index";
+import { getOfferText } from "../utils/local";
 
 const Settings: React.FC = () => {
   const [state, actions] = useGlobal();
 
-  const { employee, version } = state;
-  const { setEmployee } = actions;
+  const { employee, currentOffer, version } = state;
+  const { setEmployee, setOffer } = actions;
 
   const handleEmployeeType = (e: any) => {
     const type = e.detail.value!;
     const comision = employeeTypes.find((item) => item.type === type)!.comision;
+    const routeName = type === "truck" ? "Ejido González" : "Local";
+
     setEmployee({
       ...employee,
       type,
       comision,
-      route: { name: "Local", gas_charge: 0.0 },
+      route: { name: routeName, gas_charge: 0.0 },
     });
   };
 
@@ -43,6 +51,21 @@ const Settings: React.FC = () => {
     const route = employeeRoutes.find((item) => item.name === routeName)!;
     setEmployee({ ...employee, route });
   };
+
+  const employeeRoutesNoLocal = employeeRoutes.slice(1);
+
+  const availableOffers = offers.map(offer => (
+    <IonSelectOption key={offer.name} value={offer.name}>
+      {getOfferText(offer)}
+    </IonSelectOption>
+  ));
+
+  const handleCurrentOffer = (e: any) => {
+    const offerName = e.detail.value!;
+    const offer = offers.find((item) => item.name === offerName)!;
+    setOffer(offer);
+  };
+  const currentOfferName = currentOffer?.name || "";
 
   return (
     <IonPage>
@@ -64,7 +87,7 @@ const Settings: React.FC = () => {
             <IonIcon icon={personOutline} slot="start" />
             <IonLabel position="fixed">Nombre:</IonLabel>
             <IonInput
-              slot="end"
+              className="ion-text-right"
               placeholder="Usuario"
               value={employee.name}
               onIonChange={(e) =>
@@ -88,11 +111,24 @@ const Settings: React.FC = () => {
                 value={employee.route.name}
                 onIonChange={handleEmployeeRoute}
               >
-                {employeeRoutes.map((item) => (
+                {employeeRoutesNoLocal.map((item) => (
                   <IonSelectOption key={item.name} value={item.name}>
                     {item.name} + {formatMoney(item.gas_charge)}
                   </IonSelectOption>
                 ))}
+              </IonSelect>
+            </IonItem>
+          )}
+          {availableOffers && (
+            <IonItem>
+              <IonIcon icon={cashOutline} slot="start" />
+              <IonLabel>Promociones:</IonLabel>
+              <IonSelect
+                value={currentOfferName}
+                onIonChange={handleCurrentOffer}
+              >
+                <IonSelectOption value="">Ninguna</IonSelectOption>
+                {availableOffers.map((offer) => offer)}
               </IonSelect>
             </IonItem>
           )}

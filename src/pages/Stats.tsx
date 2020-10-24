@@ -11,13 +11,18 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-import moment from 'moment';
+import moment from "moment";
 import "moment-timezone";
 import "moment/locale/es-us";
 
 import useGlobal from "../global/store";
 import { formatMoney } from "../utils";
-import { calculateComisionCost, getGasChargeByUnits, getSalesComision, sortDates } from "../utils/local";
+import {
+  calculateComisionCost,
+  getGasChargeByUnits,
+  getSalesComision,
+  sortDates,
+} from "../utils/local";
 import RestartComision from "../components/RestartComision";
 
 const Stats: React.FC = () => {
@@ -29,7 +34,7 @@ const Stats: React.FC = () => {
   const sortedSales = sales.sort(sortDates);
 
   const todaySales = sortedSales.filter(
-    (item) => moment(item.date).diff(date, 'days') === 0
+    (item) => moment(item.date).diff(date, "days") === 0
   );
 
   const todayComision = getSalesComision(todaySales);
@@ -37,14 +42,28 @@ const Stats: React.FC = () => {
   const todaySale = todaySales.reduce(
     (acc, item) =>
       acc +
-      (calculateComisionCost(employee.comision, item) + getGasChargeByUnits(item)),
+      (calculateComisionCost(employee.comision, item) +
+        getGasChargeByUnits(item)) -
+      item.offerDiscount,
+    0
+  );
+
+  const numGarrafones = todaySales.reduce(
+    (acc, item) => {
+      if (item.product_name === 'garrafon') {
+        return acc + item.units;
+      } else {
+        return acc;
+      }
+    },
     0
   );
 
   const todaySaleNoComision = todaySales.reduce(
     (acc, item) =>
       acc +
-      (calculateComisionCost(false, item) + getGasChargeByUnits(item)),
+      (calculateComisionCost(false, item) + getGasChargeByUnits(item)) -
+      item.offerDiscount,
     0
   );
 
@@ -92,18 +111,18 @@ const Stats: React.FC = () => {
           <IonRow>
             <IonCol size="6">
               <h5 style={{ marginLeft: "1rem", textAlign: "center" }}>
-                Sin comisión
+                {employee.type === 'truck' ? 'Sin comisión' : 'Garrafones'}
               </h5>
             </IonCol>
             <IonCol size="6">
               <h5 style={{ marginLeft: "1rem", textAlign: "center" }}>
-              {employee.comision ? "Entregar hoy" : "Ventas del día"}
+                {employee.comision ? "Entregar hoy" : "Ventas del día"}
               </h5>
             </IonCol>
           </IonRow>
           <IonRow className="ion-align-items-center">
             <IonCol size="6">
-              <p className="label-number">{formatMoney(todaySaleNoComision)}</p>
+              <p className="label-number">{employee.type === 'truck' ? formatMoney(todaySaleNoComision) : numGarrafones}</p>
             </IonCol>
             <IonCol size="6">
               <p className="label-number" style={{ color: "#3880ff" }}>

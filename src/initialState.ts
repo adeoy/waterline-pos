@@ -24,6 +24,7 @@ const initialState: IState = {
   },
   version: "1.0.0",
   apiUrl: "https://consultaunica.mx/wl/",
+  currentOffer: null,
 };
 
 export default initialState;

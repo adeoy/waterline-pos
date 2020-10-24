@@ -19,7 +19,7 @@ import {
 import { cartOutline } from "ionicons/icons";
 
 import ProductTypeList from "../components/ProductTypeList";
-import { IGeo, ISale } from "../interfaces";
+import { IGeo, IPriceRule, ISale } from "../interfaces";
 import { formatMoney } from "../utils";
 
 import "./NewSale.css";
@@ -29,9 +29,11 @@ import useGlobal from "../global/store";
 import { Plugins } from "@capacitor/core";
 import { productTypes } from "../data/";
 import {
+  applyOffer,
   calculateComisionCost,
   getApplyRule,
   getGasChargeByUnits,
+  getOfferText,
 } from "../utils/local";
 
 const { Geolocation } = Plugins;
@@ -40,7 +42,7 @@ const NewSale: React.FC = () => {
   const [state, actions] = useGlobal();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { employee } = state;
+  const { employee, currentOffer } = state;
   const { addSale } = actions;
 
   const defaultForm: ISale = {
@@ -61,9 +63,30 @@ const NewSale: React.FC = () => {
       gas_charge: 0.0,
     },
     rule: null,
+    offer: currentOffer,
+    offerDiscount: 0.0,
   };
 
   const [form, setForm] = useState<ISale>(defaultForm);
+
+  const contentIsCurrentOffer = () => {
+    if (currentOffer) {
+      return (
+        <p
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            marginBottom: "0rem",
+          }}
+        >
+          Promoción:{" "}
+          <span style={{ color: "#2dd36f" }}>{getOfferText(currentOffer)}</span>
+        </p>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   const handleClickProductType = (
     name: string,
@@ -85,13 +108,21 @@ const NewSale: React.FC = () => {
     let units = Number(e.currentTarget.value || 0);
     if (units > 25) units = 25;
 
-    const { rule, product_price } = getApplyRule(
-      form.product_price,
-      form.product_name,
-      units,
-      defaultForm.product_price,
-      employee.comision
-    );
+    const offerDiscount = applyOffer(units, currentOffer, form.product_price);
+    let rule: IPriceRule | null = null;
+    let product_price: number = form.product_price;
+
+    if (offerDiscount === 0) {
+      const res = getApplyRule(
+        form.product_price,
+        form.product_name,
+        units,
+        defaultForm.product_price,
+        employee.comision
+      );
+      rule = res.rule;
+      product_price = res.product_price;
+    }
 
     const cost = product_price * units;
     const route = employee.route;
@@ -103,6 +134,8 @@ const NewSale: React.FC = () => {
       cost,
       route,
       rule,
+      offer: currentOffer,
+      offerDiscount,
     });
   };
 
@@ -113,11 +146,13 @@ const NewSale: React.FC = () => {
     });
   };
 
+  const grandTotal = () =>
+    calculateComisionCost(employee.comision, form) +
+    getGasChargeByUnits(form) -
+    form.offerDiscount;
+
   const calculateChange = (): number => {
-    const change: number =
-      form.pay_received -
-      (calculateComisionCost(employee.comision, form) +
-        getGasChargeByUnits(form));
+    const change: number = form.pay_received - grandTotal();
     if (change < 0) {
       return 0.0;
     }
@@ -155,9 +190,7 @@ const NewSale: React.FC = () => {
     !(
       form.units > 0 &&
       form.pay_received > 0 &&
-      form.pay_received >=
-        calculateComisionCost(employee.comision, form) +
-          getGasChargeByUnits(form)
+      form.pay_received >= grandTotal()
     );
 
   return (
@@ -196,6 +229,8 @@ const NewSale: React.FC = () => {
             <span style={{ color: "#3880ff" }}>{form.product_title}</span>
           </p>
 
+          {contentIsCurrentOffer()}
+
           <IonGrid>
             <IonRow>
               <IonCol size="6">
@@ -213,16 +248,12 @@ const NewSale: React.FC = () => {
                     className="input-number"
                     value={form.units === 0 ? "" : form.units}
                     onChange={onChangeUnits}
+                    tabIndex={1}
                   />
                 </div>
               </IonCol>
               <IonCol size="6">
-                <p className="label-number">
-                  {formatMoney(
-                    calculateComisionCost(employee.comision, form) +
-                      getGasChargeByUnits(form)
-                  )}
-                </p>
+                <p className="label-number">{formatMoney(grandTotal())}</p>
               </IonCol>
             </IonRow>
 
@@ -242,6 +273,7 @@ const NewSale: React.FC = () => {
                     className="input-number"
                     value={form.pay_received === 0 ? "" : form.pay_received}
                     onChange={onChangePayReceived}
+                    tabIndex={2}
                   />
                 </div>
               </IonCol>
@@ -262,6 +294,7 @@ const NewSale: React.FC = () => {
           }}
           onClick={addSell}
           disabled={isSellDisabled()}
+          tabIndex={3}
         >
           {loading ? (
             <IonLabel>

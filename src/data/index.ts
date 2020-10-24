@@ -5,6 +5,7 @@ import {
   IEmployeeType,
   IEmployeeRoute,
   IPriceRule,
+  IOffer,
 } from "../interfaces/index";
 
 import imgGarrafon from "../assets/images/garrafon.jpg";
@@ -94,6 +95,18 @@ export const employeeRoutes: IEmployeeRoute[] = [
   {
     name: "Manuel",
     gas_charge: 1.0,
+  },
+  {
+    name: "Libramiento",
+    gas_charge: 1.0,
+  },
+  {
+    name: "Graciano Sánchez",
+    gas_charge: 2.0,
+  },
+  {
+    name: "Ruíz Cortínez",
+    gas_charge: 2.0,
   },
 ];
 
@@ -270,4 +283,19 @@ export const guides = [
       },
     ],
   },
+];
+
+export const offers: IOffer[] = [
+  {
+    name: 'Inauguración',
+    type: 'axb',
+    data: {
+      get: 3,
+      pay: 2,
+    },
+    date: {
+      from: '2020-10-21T14:00:00.000Z', // 9am
+      to: '2020-10-23T22:00:00.000Z', // 5pm
+    }
+  }
 ];

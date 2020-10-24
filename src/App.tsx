@@ -81,7 +81,7 @@ const App: React.FC = () => {
             </IonTabButton>
             <IonTabButton tab="tab5" href="/settings">
               <IonIcon icon={settingsOutline} />
-              <IonLabel>Configuración</IonLabel>
+              <IonLabel>Ajustes</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

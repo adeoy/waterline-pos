@@ -1,25 +1,11 @@
 import { Store } from "use-global-hook";
 
-import { IEmployee, ISale, IState, IToast } from "../interfaces";
+import { IEmployee, IOffer, ISale, IState, IToast } from "../interfaces";
 import { IActions } from "../interfaces";
 import { setItem, getItem, delItem } from "../utils";
 import { IAlert } from "../interfaces/index";
 import Axios from "axios";
 import { getSalesComision } from "../utils/local";
-
-export const addSale = (store: Store<IState, IActions>, sale: ISale) => {
-  const sales = [...store.state.sales, sale];
-  setItem("sales", sales);
-  store.setState({
-    ...store.state,
-    sales,
-    toast: {
-      isOpen: true,
-      message: "Venta registrada",
-      color: "primary",
-    },
-  });
-};
 
 export const getDataFromLocalStorage = async (
   store: Store<IState, IActions>
@@ -40,6 +26,20 @@ export const getDataFromLocalStorage = async (
     deletedSales,
     employee,
     salesInfo,
+  });
+};
+
+export const addSale = (store: Store<IState, IActions>, sale: ISale) => {
+  const sales = [...store.state.sales, sale];
+  setItem("sales", sales);
+  store.setState({
+    ...store.state,
+    sales,
+    toast: {
+      isOpen: true,
+      message: "Venta registrada",
+      color: "primary",
+    },
   });
 };
 
@@ -201,5 +201,15 @@ export const restartComision = (store: Store<IState, IActions>) => {
   store.setState({
     ...store.state,
     salesInfo,
+  });
+};
+
+export const setOffer = (
+  store: Store<IState, IActions>,
+  currentOffer: IOffer | null
+) => {
+  store.setState({
+    ...store.state,
+    currentOffer,
   });
 };

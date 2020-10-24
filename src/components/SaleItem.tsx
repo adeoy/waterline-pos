@@ -42,8 +42,11 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
   };
 
   const gasCharge = getGasChargeByUnits(sale);
-  const ganancia =
-    (employee.comision ? sale.product_comision : 0.0) * sale.units;
+  let ganancia = (employee.comision ? sale.product_comision : 0.0) * sale.units;
+  if (employee.comision && sale.offerDiscount > 0) {
+    ganancia -=
+      (sale.offerDiscount / sale.product_price) * sale.product_comision;
+  }
 
   return (
     <IonItem>
@@ -54,11 +57,11 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
         <h2>
           {sale.units} x {sale.product_title} ={" "}
           <span style={{ color: "#3880ff" }}>
-            {formatMoney(sale.cost + ganancia + gasCharge)}
+            {formatMoney(sale.cost + ganancia + gasCharge - sale.offerDiscount)}
           </span>
         </h2>
         <h3>
-          <span style={{color: '#3dc2ff'}}>
+          <span style={{ color: "#3dc2ff" }}>
             <IonIcon icon={waterOutline} color="secondary"></IonIcon>
             {formatMoney(sale.cost)}
           </span>
@@ -70,10 +73,17 @@ const SaleItem: React.FC<IProps> = ({ sale }) => {
             </span>
           )}
           {gasCharge > 0 && (
+            <span style={{ color: "#ffc409" }}>
+              {" "}
+              + <IonIcon icon={carOutline} color="warning"></IonIcon>{" "}
+              {formatMoney(gasCharge)}
+            </span>
+          )}
+          {sale.offerDiscount > 0 && (
             <span style={{ color: "#eb445a" }}>
               {" "}
-              + <IonIcon icon={carOutline} color="danger"></IonIcon>{" "}
-              {formatMoney(gasCharge)}
+              - <IonIcon icon={cashOutline} color="danger"></IonIcon>{" "}
+              {formatMoney(sale.offerDiscount)}
             </span>
           )}
         </h3>
