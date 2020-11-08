@@ -22,9 +22,10 @@ const initialState: IState = {
   salesInfo: {
     weekComision: 0.0,
   },
-  version: "1.0.0",
+  version: "1.1.0",
   apiUrl: "https://consultaunica.mx/wl/",
   currentOffer: null,
+  currentBusinessPrice: null,
 };
 
 export default initialState;

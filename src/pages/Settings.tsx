@@ -22,16 +22,18 @@ import {
   mapOutline,
   medalOutline,
   personOutline,
+  peopleOutline
 } from "ionicons/icons";
 import { employeeTypes, employeeRoutes, offers } from "../data";
 import { formatMoney } from "../utils/index";
 import { getOfferText } from "../utils/local";
+import { businessPrices } from "../data/index";
 
 const Settings: React.FC = () => {
   const [state, actions] = useGlobal();
 
-  const { employee, currentOffer, version } = state;
-  const { setEmployee, setOffer } = actions;
+  const { employee, currentOffer, currentBusinessPrice, version } = state;
+  const { setEmployee, setOffer, setBusinessPrice } = actions;
 
   const handleEmployeeType = (e: any) => {
     const type = e.detail.value!;
@@ -54,18 +56,31 @@ const Settings: React.FC = () => {
 
   const employeeRoutesNoLocal = employeeRoutes.slice(1);
 
-  const availableOffers = offers.map(offer => (
+  const availableOffers = offers.map((offer) => (
     <IonSelectOption key={offer.name} value={offer.name}>
       {getOfferText(offer)}
     </IonSelectOption>
   ));
-
   const handleCurrentOffer = (e: any) => {
     const offerName = e.detail.value!;
     const offer = offers.find((item) => item.name === offerName)!;
     setOffer(offer);
   };
   const currentOfferName = currentOffer?.name || "";
+
+  const availableBusinessPrices = businessPrices.map((item) => (
+    <IonSelectOption key={item.name} value={item.name}>
+      -{formatMoney(item.discount)}
+    </IonSelectOption>
+  ));
+  const handleBusinessPrice = (e: any) => {
+    const businessPriceName = e.detail.value!;
+    const businessPrice = businessPrices.find(
+      (item) => item.name === businessPriceName
+    )!;
+    setBusinessPrice(businessPrice);
+  };
+  const currentBusinessPriceName = currentBusinessPrice?.name || "";
 
   return (
     <IonPage>
@@ -129,6 +144,19 @@ const Settings: React.FC = () => {
               >
                 <IonSelectOption value="">Ninguna</IonSelectOption>
                 {availableOffers.map((offer) => offer)}
+              </IonSelect>
+            </IonItem>
+          )}
+          {availableBusinessPrices && (
+            <IonItem>
+              <IonIcon icon={peopleOutline} slot="start" />
+              <IonLabel>Descuento negocios:</IonLabel>
+              <IonSelect
+                value={currentBusinessPriceName}
+                onIonChange={handleBusinessPrice}
+              >
+                <IonSelectOption value="">Ninguno</IonSelectOption>
+                {availableBusinessPrices.map((item) => item)}
               </IonSelect>
             </IonItem>
           )}

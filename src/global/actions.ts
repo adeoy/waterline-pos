@@ -1,6 +1,6 @@
 import { Store } from "use-global-hook";
 
-import { IEmployee, IOffer, ISale, IState, IToast } from "../interfaces";
+import { IBusinessPrice, IEmployee, IOffer, ISale, IState, IToast } from "../interfaces";
 import { IActions } from "../interfaces";
 import { setItem, getItem, delItem } from "../utils";
 import { IAlert } from "../interfaces/index";
@@ -211,5 +211,15 @@ export const setOffer = (
   store.setState({
     ...store.state,
     currentOffer,
+  });
+};
+
+export const setBusinessPrice = (
+  store: Store<IState, IActions>,
+  currentBusinessPrice: IBusinessPrice | null
+) => {
+  store.setState({
+    ...store.state,
+    currentBusinessPrice,
   });
 };

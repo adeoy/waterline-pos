@@ -30,25 +30,39 @@ const ProductType: React.FC<IProps> = ({
 }) => {
   const state = useGlobal()[0];
 
-  const { employee } = state;
+  const { employee, currentBusinessPrice } = state;
 
   const calculateComision = (): number => {
     return employee.comision ? comision : 0;
   };
 
-  const { product_price } = getApplyRule(
-    price,
-    name,
-    units,
-    10.0,
-    employee.comision
-  );
-  price = product_price;
+  const businessDiscount = currentBusinessPrice?.discount || 0.0;
+  if (businessDiscount === 0 && name === "garrafon") {
+    const { product_price } = getApplyRule(
+      price,
+      name,
+      units,
+      10.0,
+      employee.comision
+    );
+    price = product_price;
+  }
 
   let gasCharge =
     name === "garrafon" || name === "medio_garrafon"
       ? employee.route.gas_charge
       : 0.0;
+
+  let discountBusinessView = 0.0;
+  if (name === "garrafon") {
+    discountBusinessView = businessDiscount;
+    if (employee.route.name === "Ejido González") {
+      price -= 1;
+    }
+  }
+
+  const totalPrice =
+    price + calculateComision() + gasCharge - discountBusinessView;
 
   return (
     <IonCard
@@ -58,7 +72,7 @@ const ProductType: React.FC<IProps> = ({
     >
       <img src={image} alt={title} width={80} />
       <IonLabel style={{ fontWeight: "bold" }} color="primary">
-        {formatMoney(price + calculateComision() + gasCharge)}
+        {formatMoney(totalPrice)}
       </IonLabel>
     </IonCard>
   );

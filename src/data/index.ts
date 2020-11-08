@@ -6,6 +6,7 @@ import {
   IEmployeeRoute,
   IPriceRule,
   IOffer,
+  IBusinessPrice,
 } from "../interfaces/index";
 
 import imgGarrafon from "../assets/images/garrafon.jpg";
@@ -111,21 +112,21 @@ export const employeeRoutes: IEmployeeRoute[] = [
 ];
 
 export const pricesRules: IPriceRule[] = [
-  {
+  /*{
     name: "Entre 6 y menos de 8",
-    price: 9.0,
+    price: 1.0,
     valid: (units: number): boolean => units >= 6 && units < 8,
   },
   {
     name: "Entre 8 y menos de 10",
-    price: 8.0,
+    price: 2.0,
     valid: (units: number): boolean => units >= 8 && units < 10,
   },
   {
     name: "Entre 10 y menos de 26",
-    price: 7.0,
+    price: 3.0,
     valid: (units: number): boolean => units >= 10 && units < 26,
-  },
+  },*/
 ];
 
 export const guides = [
@@ -297,5 +298,35 @@ export const offers: IOffer[] = [
       from: '2020-10-21T14:00:00.000Z', // 9am
       to: '2020-10-23T22:00:00.000Z', // 5pm
     }
+  },
+  {
+    name: '3er compra',
+    type: 'xfree',
+    data: {
+      units: 1,
+    },
   }
 ];
+
+export const businessPrices: IBusinessPrice[] = [
+  {
+    name: 'menos1',
+    discount: 1.0,
+  },
+  {
+    name: 'menos2',
+    discount: 2.0,
+  },
+  {
+    name: 'menos3',
+    discount: 3.0,
+  },
+  {
+    name: 'menos4',
+    discount: 4.0,
+  },
+  {
+    name: 'menos5',
+    discount: 5.0,
+  }
+]

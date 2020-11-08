@@ -27,6 +27,9 @@ export interface IOfferAxB {
   pay: number;
 }
 
+export interface IOfferXFree {
+  units: number;
+}
 export interface IOfferDate {
   from: string;
   to: string;
@@ -35,8 +38,8 @@ export interface IOfferDate {
 export interface IOffer {
   name: string;
   type: string;
-  data: IOfferAxB;
-  date: IOfferDate;
+  data: IOfferAxB | IOfferXFree;
+  date?: IOfferDate;
 }
 
 export interface ISale {
@@ -53,6 +56,7 @@ export interface ISale {
   rule: IPriceRule | null;
   offer: IOffer | null;
   offerDiscount: number;
+  businessDiscount: number;
 }
 
 export interface IToast {
@@ -81,6 +85,11 @@ export interface ISalesInfo {
   weekComision: number;
 }
 
+export interface IBusinessPrice {
+  name: string;
+  discount: number;
+}
+
 export interface IState {
   employee: IEmployee;
   sales: ISale[];
@@ -91,6 +100,7 @@ export interface IState {
   apiUrl: string;
   salesInfo: ISalesInfo;
   currentOffer: IOffer | null;
+  currentBusinessPrice: IBusinessPrice | null;
 }
 
 export interface IActions {
@@ -105,4 +115,5 @@ export interface IActions {
   setEmployee: (employee: IEmployee) => void;
   restartComision: () => void;
   setOffer: (offer: IOffer | null) => void;
+  setBusinessPrice: (businessPrice: IBusinessPrice | null) => void;
 }

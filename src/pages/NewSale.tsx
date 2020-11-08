@@ -27,9 +27,10 @@ import "./NewSale.css";
 import useGlobal from "../global/store";
 
 import { Plugins } from "@capacitor/core";
-import { productTypes } from "../data/";
+import { productTypes } from "../data";
 import {
   applyOffer,
+  calculateBusinessDiscount,
   calculateComisionCost,
   getApplyRule,
   getGasChargeByUnits,
@@ -42,8 +43,10 @@ const NewSale: React.FC = () => {
   const [state, actions] = useGlobal();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { employee, currentOffer } = state;
+  const { employee, currentOffer, currentBusinessPrice } = state;
   const { addSale } = actions;
+
+  const businessDiscount = currentBusinessPrice?.discount || 0.0;
 
   const defaultForm: ISale = {
     product_name: "garrafon",
@@ -65,6 +68,7 @@ const NewSale: React.FC = () => {
     rule: null,
     offer: currentOffer,
     offerDiscount: 0.0,
+    businessDiscount,
   };
 
   const [form, setForm] = useState<ISale>(defaultForm);
@@ -107,17 +111,26 @@ const NewSale: React.FC = () => {
   const onChangeUnits = (e: React.FormEvent<HTMLInputElement>) => {
     let units = Number(e.currentTarget.value || 0);
     if (units > 25) units = 25;
+    if (units < 0) units = 0;
 
-    const offerDiscount = applyOffer(units, currentOffer, form.product_price);
+    let price = form.product_price;
+    if (form.product_name === "garrafon") {
+      price = 10.0;
+      if (employee.route.name === "Ejido González") {
+        price = 9.0;
+      }
+    }
+
+    const offerDiscount = applyOffer(units, currentOffer, price);
     let rule: IPriceRule | null = null;
-    let product_price: number = form.product_price;
+    let product_price: number = price;
 
-    if (offerDiscount === 0) {
+    if (businessDiscount === 0.0) {
       const res = getApplyRule(
-        form.product_price,
+        price,
         form.product_name,
         units,
-        defaultForm.product_price,
+        price,
         employee.comision
       );
       rule = res.rule;
@@ -146,10 +159,19 @@ const NewSale: React.FC = () => {
     });
   };
 
-  const grandTotal = () =>
-    calculateComisionCost(employee.comision, form) +
-    getGasChargeByUnits(form) -
-    form.offerDiscount;
+  const grandTotal = () => {
+    const costNcomision = calculateComisionCost(employee.comision, form);
+    const gasCharge = getGasChargeByUnits(form);
+    const realBusinessDiscount = calculateBusinessDiscount(
+      businessDiscount,
+      form
+    );
+
+    const total =
+      costNcomision + gasCharge - form.offerDiscount - realBusinessDiscount;
+    if (total < 0) return 0;
+    return total;
+  };
 
   const calculateChange = (): number => {
     const change: number = form.pay_received - grandTotal();
@@ -182,7 +204,7 @@ const NewSale: React.FC = () => {
         long: coordinates.coords.longitude,
       };
     }
-    addSale({ ...form, geo, date: new Date().toISOString() });
+    addSale({ ...form, geo, date: new Date().toISOString(), businessDiscount });
     setLoading(false);
   };
 
